@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project 
+    xmlns:ivy="antlib:org.apache.ivy.ant"
+    name="algoritmos" 
+    default="run-tests" 
+    basedir=".">
+    <description>
+        Projeto de algoritmos
+    </description>
+    <property name="src-dir" value="src" />
+    <property name="test-src-dir" value="test" />
+    <property name="build-dir" value="build" />
+    <property name="test-build-dir" value="test-build" />
+    <property name="web-root" value="${build-dir}/web-root" />
+    <property name="ivy.version" value="2.0.0-beta1" />
+    <property name="ivy.jar.dir" value="${basedir}/lib/ivy" />
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+
+    <path id="main-cp">
+        <pathelement location="${build-dir}" />
+        <fileset dir="lib/main">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+    <path id="test-cp">
+        <pathelement location="lib/test/junit.jar" />
+        <pathelement location="${test-build-dir}" />
+        <path refid="main-cp" />
+    </path>
+
+    <target name="run-tests" depends="compile-tests">
+        <junit>
+            <classpath refid="test-cp" />
+            <formatter type="brief" usefile="false" />
+            <test name="br.ufpe.cin.algoritmos.AllTests" />
+        </junit>
+    </target>
+
+    <target name="run" depends="compile">
+        <java
+            classname="br.ufpe.cin.algoritmos.web.WebStart"
+            fork="true"
+            dir="${web-root}">
+            <classpath refid="main-cp" />
+            <arg value="." />
+            <arg value="8080" />
+        </java>
+    </target>
+
+    <target name="compile-tests" depends="compile">
+        <javac srcdir="${test-src-dir}" destdir="${test-build-dir}">
+            <classpath refid="test-cp" />
+        </javac>
+    </target>
+
+
+    <target name="compile" depends="resolve">
+        <javac srcdir="${src-dir}" destdir="${build-dir}">
+            <classpath refid="main-cp" />
+        </javac>
+    </target>
+
+    <target name="resolve" description="retrieve dependencies"
+        depends="prepare">
+        <ivy:retrieve 
+            pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]"
+            type="jar,bundle"
+            sync="true"/>
+    </target>
+
+    <target name="prepare" depends="install-ivy">
+        <mkdir dir="${build-dir}" />
+        <mkdir dir="${test-build-dir}" />
+        <mkdir dir="${web-root}" />
+    </target>
+
+    <target name="install-ivy" depends="download-ivy" description="--> install ivy">
+        <path id="ivy.lib.path">
+            <fileset 
+                dir="${ivy.jar.dir}" 
+                includes="*.jar"/>
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target>
+
+    <target name="download-ivy" unless="skip.ivy.download">
+        <mkdir dir="${ivy.jar.dir}" />
+        <echo message="installing ivy..." />
+        <get 
+            src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" 
+            dest="${ivy.jar.file}" 
+            usetimestamp="true" />
+    </target>
+
+    <target name="clean">
+        <delete dir="${build-dir}" />
+        <delete dir="${test-build-dir}" />
+        <delete dir="bin" />
+        <delete dir="lib" />
+    </target>
+
+
+</project>
+
+
