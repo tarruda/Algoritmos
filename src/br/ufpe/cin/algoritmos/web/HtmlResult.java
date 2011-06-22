@@ -5,11 +5,6 @@ import java.io.PrintWriter;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.apache.velocity.context.Context;
-import org.apache.velocity.runtime.RuntimeSingleton;
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupDir;
 
 class HtmlResult extends Result {
 
@@ -28,10 +23,11 @@ class HtmlResult extends Result {
 
 	@Override
 	public void render(PrintWriter writer) {
+		Velocity.init();
 		VelocityContext context = new VelocityContext();
 		context.put("model", model);
-		Template template = null;
-		template = Velocity.getTemplate("index.vm");
+		Template template = Velocity.getTemplate("templates/" + templateName
+				+ ".vm", "UTF-8");
 		template.merge(context, writer);
 	}
 }

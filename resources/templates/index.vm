@@ -1,11 +1,11 @@
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
-       <title>$model.title$</title>
+       <title>$model</title>
     </head>
     <body>
-       <p>Hello again, $model.name$ !</p>
-       <p>Greetings to your friends</p>
-   </body>
+       <p>Hello $model!</p>
+       <p>Bem vindo!</p>
+       <a href="/usuarios">Lista de usuários</a>
+    </body>
 </html>

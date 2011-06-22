@@ -8,7 +8,10 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -23,7 +26,6 @@ public class AppServlet extends HttpServlet {
 	private static final long serialVersionUID = -2078658879853768152L;
 	private static final String controllersPath = "br/ufpe/cin/algoritmos/controllers/";
 	private static final String controllersPackage = "br.ufpe.cin.algoritmos.controllers.";
-	private static final ClassLoader cl = new ControllerClassLoader();
 
 	private Pattern uriPattern;
 	private Map<String, Class<?>> mappedControllers;
@@ -46,20 +48,34 @@ public class AppServlet extends HttpServlet {
 			String controllerName = matcher.group(1);
 			Class<?> controllerClass = loadControllerClass(controllerName);
 			if (controllerClass == null)
-				respondNotFound(req, resp);
+				resp.sendRedirect("/index");
 			else {
 				String method = req.getMethod();
 				Method controllerMethod = getControllerMethod(method, req
 						.getParameterMap(), controllerClass);
 				if (controllerMethod == null)
-					respondNotAllowed(req, resp);
+					resp.sendRedirect("/index");
 				else {
 					try {
 						Object controller = createController(controllerClass);
+
+						Collection values = req.getParameterMap().values();
+						String[] paramValues = new String[values.size()];
+						int idx = 0;
+						for (Object o : values) {
+							String[] oo = (String[]) o;
+							paramValues[idx] = oo[0];
+							idx++;
+						}
+
 						Result result = (Result) controllerMethod.invoke(
-								controller, req.getParameterMap().values()
-										.toArray());
-						result.render(resp.getWriter());
+								controller, paramValues);
+
+						if (result instanceof RedirectResult)
+							resp.sendRedirect(((RedirectResult) result)
+									.getUrl());
+						else
+							result.render(resp.getWriter());
 					} catch (Exception ex) {
 						printException(req, resp, ex);
 					}
@@ -67,26 +83,39 @@ public class AppServlet extends HttpServlet {
 
 			}
 		} else
-			respondNotFound(req, resp);
+			resp.sendRedirect("/index");
 	}
 
 	private Class<?> loadControllerClass(String name) {
+		String key = name.toLowerCase();
 		Class<?> ret = null;
-		if (!mappedControllers.containsKey(name))
+		if (!mappedControllers.containsKey(key))
 			synchronized (mappedControllers) {
-				if (!mappedControllers.containsKey(name))
+				if (!mappedControllers.containsKey(key))
 					try {
-						ret = cl.loadClass(controllersPackage + name
-								+ "Controller");
-						mappedControllers.put(name, ret);
+
+						File controllerDir = new File(controllersPath);
+						String[] files = controllerDir.list();
+						for (String file : files) {
+							String fullClassName = controllersPackage + file;
+							fullClassName = fullClassName.replaceAll(".class",
+									"");
+							String keyName = file.replaceAll(
+									"Controller.class", "");
+							mappedControllers.put(keyName.toLowerCase(), Class
+									.forName(fullClassName));
+						}
+
+						ret = mappedControllers.get(key);
+
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 					}
 				else
-					ret = mappedControllers.get(name);
+					ret = mappedControllers.get(key);
 			}
 		else
-			ret = mappedControllers.get(name);
+			ret = mappedControllers.get(key);
 		return ret;
 	}
 
@@ -132,55 +161,6 @@ public class AppServlet extends HttpServlet {
 		resp.getWriter().println("<h3>");
 		ex.printStackTrace(resp.getWriter());
 		resp.getWriter().println("</h3>");
-	}
-
-	private void respondNotAllowed(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException {
-		resp.setContentType("text/html");
-		resp.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-		resp.getWriter().println("<h1>Not allowed.</h1>");
-	}
-
-	private void respondNotFound(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException {
-		resp.setContentType("text/html");
-		resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-		resp.getWriter().println("<h1>Not found.</h1>");
-	}
-
-	private static class ControllerClassLoader extends URLClassLoader {
-
-		public ControllerClassLoader() {
-			super(new URL[0], AppServlet.class.getClassLoader());
-		}
-
-		@Override
-		protected Class<?> findClass(final String name)
-				throws ClassNotFoundException {
-			getParent();
-
-			String filePath = name.replace('.', '/');
-			filePath = filePath + ".class";
-			BufferedInputStream classIs = null;
-
-			File f = new File(filePath);
-			if (f.exists())
-				try {
-					classIs = new BufferedInputStream(new FileInputStream(f));
-				} catch (FileNotFoundException e1) {
-				}
-			if (classIs == null)
-				classIs = new BufferedInputStream(ClassLoader
-						.getSystemResourceAsStream(filePath));
-			byte[] classBytes;
-			try {
-				classBytes = new byte[classIs.available()];
-				classIs.read(classBytes);
-				return defineClass(name, classBytes, 0, classBytes.length);
-			} catch (IOException e) {
-				return null;
-			}
-		}
 	}
 
 }
