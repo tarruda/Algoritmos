@@ -7,12 +7,16 @@
     <description>
         Projeto de algoritmos
     </description>
+    <property name="content-dir" value="content" />
     <property name="views-dir" value="br/ufpe/cin/algoritmos/views" />
     <property name="src-dir" value="src" />
     <property name="test-src-dir" value="test" />
+    <property name="content-src-dir" value="${src-dir}/${content-dir}" />
     <property name="views-src-dir" value="${src-dir}/${views-dir}" />
     <property name="build-dir" value="build" />
     <property name="test-build-dir" value="test-build" />
+    <property name="content-build-dir" 
+        value="${build-dir}/${content-dir}" />
     <property name="views-build-dir" value="${build-dir}/${views-dir}" />
     <property name="ivy.version" value="2.0.0-beta1" />
     <property name="ivy.jar.dir" value="${basedir}/lib/ivy" />
@@ -60,6 +64,9 @@
         <javac srcdir="${src-dir}" destdir="${build-dir}">
             <classpath refid="main-cp" />
         </javac>
+        <copy todir="${content-build-dir}">
+            <fileset dir="${content-src-dir}" />
+        </copy>
         <copy todir="${views-build-dir}">
             <fileset dir="${views-src-dir}" />
         </copy>

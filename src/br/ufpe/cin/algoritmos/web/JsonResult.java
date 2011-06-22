@@ -2,6 +2,8 @@ package br.ufpe.cin.algoritmos.web;
 
 import java.io.PrintWriter;
 
+import com.google.gson.Gson;
+
 class JsonResult extends Result {
 	private Object object;
 
@@ -16,7 +18,10 @@ class JsonResult extends Result {
 
 	@Override
 	public void render(PrintWriter writer) {
-		// TODO Auto-generated method stub
-
+		String ret = "null";
+		Gson serializer = new Gson();
+		if (object != null)
+			ret = serializer.toJson(object);
+		writer.write(ret);
 	}
 }

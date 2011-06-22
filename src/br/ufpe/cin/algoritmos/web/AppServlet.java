@@ -1,17 +1,10 @@
 package br.ufpe.cin.algoritmos.web;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -22,8 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@SuppressWarnings("serial")
 public class AppServlet extends HttpServlet {
-	private static final long serialVersionUID = -2078658879853768152L;
 	private static final String controllersPath = "br/ufpe/cin/algoritmos/controllers/";
 	private static final String controllersPackage = "br.ufpe.cin.algoritmos.controllers.";
 
@@ -59,7 +52,7 @@ public class AppServlet extends HttpServlet {
 					try {
 						Object controller = createController(controllerClass);
 
-						Collection values = req.getParameterMap().values();
+						Collection<?> values = req.getParameterMap().values();
 						String[] paramValues = new String[values.size()];
 						int idx = 0;
 						for (Object o : values) {
@@ -69,7 +62,7 @@ public class AppServlet extends HttpServlet {
 						}
 
 						Result result = (Result) controllerMethod.invoke(
-								controller, paramValues);
+								controller, (Object[]) paramValues);
 
 						if (result instanceof RedirectResult)
 							resp.sendRedirect(((RedirectResult) result)
@@ -119,10 +112,10 @@ public class AppServlet extends HttpServlet {
 		return ret;
 	}
 
-	private Method getControllerMethod(String method, Map parameterMap,
+	private Method getControllerMethod(String method, Map<?, ?> parameterMap,
 			Class<?> controllerClass) {
 		Method ret = null;
-		Set keySet = parameterMap.keySet();
+		Set<?> keySet = parameterMap.keySet();
 		int size = keySet.size();
 
 		Class<?>[] paramTypes = new Class<?>[size];
