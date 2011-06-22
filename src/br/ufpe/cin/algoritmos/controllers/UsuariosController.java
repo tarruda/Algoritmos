@@ -2,7 +2,7 @@ package br.ufpe.cin.algoritmos.controllers;
 
 import java.util.ArrayList;
 
-import br.ufpe.cin.algoritmos.model.Usuario;
+import br.ufpe.cin.algoritmos.models.Usuario;
 import br.ufpe.cin.algoritmos.web.Controller;
 import br.ufpe.cin.algoritmos.web.Result;
 

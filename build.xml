@@ -7,11 +7,13 @@
     <description>
         Projeto de algoritmos
     </description>
+    <property name="views-dir" value="br/ufpe/cin/algoritmos/views" />
     <property name="src-dir" value="src" />
     <property name="test-src-dir" value="test" />
+    <property name="views-src-dir" value="${src-dir}/${views-dir}" />
     <property name="build-dir" value="build" />
     <property name="test-build-dir" value="test-build" />
-    <property name="web-root" value="${build-dir}/web-root" />
+    <property name="views-build-dir" value="${build-dir}/${views-dir}" />
     <property name="ivy.version" value="2.0.0-beta1" />
     <property name="ivy.jar.dir" value="${basedir}/lib/ivy" />
     <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
@@ -40,7 +42,7 @@
         <java
             classname="br.ufpe.cin.algoritmos.web.WebStart"
             fork="true"
-            dir="${web-root}">
+            dir="${build-dir}">
             <classpath refid="main-cp" />
             <arg value="." />
             <arg value="8080" />
@@ -58,6 +60,9 @@
         <javac srcdir="${src-dir}" destdir="${build-dir}">
             <classpath refid="main-cp" />
         </javac>
+        <copy todir="${views-build-dir}">
+            <fileset dir="${views-src-dir}" />
+        </copy>
     </target>
 
     <target name="resolve" description="retrieve dependencies"
@@ -71,7 +76,7 @@
     <target name="prepare" depends="install-ivy">
         <mkdir dir="${build-dir}" />
         <mkdir dir="${test-build-dir}" />
-        <mkdir dir="${web-root}" />
+        <mkdir dir="${views-build-dir}" />
     </target>
 
     <target name="install-ivy" depends="download-ivy" description="--> install ivy">

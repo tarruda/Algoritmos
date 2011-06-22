@@ -26,7 +26,7 @@ class HtmlResult extends Result {
 		Velocity.init();
 		VelocityContext context = new VelocityContext();
 		context.put("model", model);
-		Template template = Velocity.getTemplate("templates/" + templateName
+		Template template = Velocity.getTemplate("br/ufpe/cin/algoritmos/views/" + templateName
 				+ ".vm", "UTF-8");
 		template.merge(context, writer);
 	}

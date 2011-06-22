@@ -1,4 +1,4 @@
-package br.ufpe.cin.algoritmos.model;
+package br.ufpe.cin.algoritmos.models;
 
 public class Usuario {
 
