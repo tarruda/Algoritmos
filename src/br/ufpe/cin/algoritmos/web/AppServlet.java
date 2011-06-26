@@ -41,16 +41,21 @@ public class AppServlet extends HttpServlet {
 			String controllerName = matcher.group(1);
 			Class<?> controllerClass = loadControllerClass(controllerName);
 			if (controllerClass == null)
-				resp.sendRedirect("/index");
+				resp.getWriter().println("Controller nao encontrado.");
+			// resp.sendRedirect("/index");
 			else {
 				String method = req.getMethod();
-				Method controllerMethod = getControllerMethod(method, req
-						.getParameterMap(), controllerClass);
+				Method controllerMethod = getControllerMethod(method,
+						req.getParameterMap(), controllerClass);
 				if (controllerMethod == null)
-					resp.sendRedirect("/index");
+					resp.getWriter().println("Método nao encontrado.");
+				// resp.sendRedirect("/index");
 				else {
 					try {
-						Object controller = createController(controllerClass);
+						Controller controller = (Controller) createController(controllerClass);
+
+						controller.setRequest(req);
+						controller.setResponse(resp);
 
 						Collection<?> values = req.getParameterMap().values();
 						String[] paramValues = new String[values.size()];
@@ -60,9 +65,10 @@ public class AppServlet extends HttpServlet {
 							paramValues[idx] = oo[0];
 							idx++;
 						}
-
-						Result result = (Result) controllerMethod.invoke(
-								controller, (Object[]) paramValues);
+						Result result = controller.beforeRequest();
+						if (result == null)
+							result = (Result) controllerMethod.invoke(
+									controller, (Object[]) paramValues);
 
 						if (result instanceof RedirectResult)
 							resp.sendRedirect(((RedirectResult) result)
@@ -95,8 +101,8 @@ public class AppServlet extends HttpServlet {
 									"");
 							String keyName = file.replaceAll(
 									"Controller.class", "");
-							mappedControllers.put(keyName.toLowerCase(), Class
-									.forName(fullClassName));
+							mappedControllers.put(keyName.toLowerCase(),
+									Class.forName(fullClassName));
 						}
 
 						ret = mappedControllers.get(key);

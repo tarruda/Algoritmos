@@ -2,6 +2,8 @@
 <html>
     <head>
        <title>Lista de usuários</title>
+       <script type="text/javascript" src="/content/js/jquery.js"></script>
+       <script type="text/javascript" src="/content/js/teste.js"></script>
     </head>
     <body>
       #if ( $model.size() > 0 )
@@ -29,6 +31,12 @@
 		        </td>
 		        <td>
 		          $usuario.telefone       
+		        </td>
+		        <td>
+		          <form action="/excluirusuario" method="post">
+		            <input type="hidden" value="$usuario.id" name="id">
+		            <input type="submit" value="Excluir">
+		          </form>
 		        </td>
 		      </tr>
 	   		#end
