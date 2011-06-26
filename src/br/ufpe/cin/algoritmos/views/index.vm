@@ -4,6 +4,7 @@
        <title>$model</title>
     </head>
     <body>
+       <!-- <img src="/content/teste.jpg"> -->
        <p>Hello $model!</p>
        <p>Bem vindo!</p>
        <a href="/usuarios">Lista de usuários</a>
