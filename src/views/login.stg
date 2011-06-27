@@ -11,8 +11,10 @@ import "layout.stg"
 	<form id="login-form" action="login" method="post">	
 		<div data-role="fieldcontain">		
 			<label for="userName">Digite seu nome:</label><input type="text" id="userName" name="userName" />					
-		</div>	
-		<input type="submit" value="Entrar" />				
+		</div>			
+		<div data-role="fieldcontain">
+			<input type="submit" value="Entrar" />
+		</div>			
 	</form>
 </div>
 >>

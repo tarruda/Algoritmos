@@ -25,7 +25,7 @@ page(model, isMobile, userName) ::= <<
        <div id="page" data-role="page">
        		<div id="menu" data-role="header">
        			$@headerButton$
-       			<a href="/logout" data-icon="delete">Sair</a>  
+       			<a href="/logout" class="ui-btn-right" data-icon="delete">Sair</a>  
        			$@end$       			  			
 	       		<h1>	       			
 	       			$@title()$	       			

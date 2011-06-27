@@ -3,6 +3,8 @@ package br.ufpe.cin.algoritmos.binarytree;
 public class AVLTree<TKey extends Comparable<TKey>, TValue> extends
 		SearchTree<TKey, TValue> {
 
+	private static final long serialVersionUID = 1761210742374791730L;
+
 	@Override
 	protected void onInsert(TreeNode<TKey, TValue> node) {
 		super.onInsert(node);
@@ -50,8 +52,8 @@ public class AVLTree<TKey extends Comparable<TKey>, TValue> extends
 	private void rotateLeft(TreeNode<TKey, TValue> node) {
 		TreeNode<TKey, TValue> right = node.getRight();
 		TreeNode<TKey, TValue> left = node.getLeft();
-		TreeNode<TKey, TValue> newLeft = new TreeNode<TKey, TValue>(node.getKey(), node
-				.getValue());
+		TreeNode<TKey, TValue> newLeft = new TreeNode<TKey, TValue>(node
+				.getKey(), node.getValue());
 
 		// Update root
 		node.setKey(right.getKey());
@@ -75,8 +77,8 @@ public class AVLTree<TKey extends Comparable<TKey>, TValue> extends
 	private void rotateRight(TreeNode<TKey, TValue> node) {
 		TreeNode<TKey, TValue> right = node.getRight();
 		TreeNode<TKey, TValue> left = node.getLeft();
-		TreeNode<TKey, TValue> newRight = new TreeNode<TKey, TValue>(node.getKey(),
-				node.getValue());
+		TreeNode<TKey, TValue> newRight = new TreeNode<TKey, TValue>(node
+				.getKey(), node.getValue());
 
 		// Set new root
 		node.setKey(left.getKey());

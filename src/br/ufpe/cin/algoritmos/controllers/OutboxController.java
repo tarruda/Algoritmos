@@ -1,7 +1,9 @@
 package br.ufpe.cin.algoritmos.controllers;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.List;
 
+import br.ufpe.cin.algoritmos.db.FileDatabase;
 import br.ufpe.cin.algoritmos.models.Message;
 import br.ufpe.cin.algoritmos.web.Result;
 
@@ -9,13 +11,17 @@ public class OutboxController extends ControllerBase {
 
 	@Override
 	public Result get() {
-		ArrayList<Message> messages = new ArrayList<Message>();
 		String userName = getUserName();
-
-		for (Message message : Message.list)
-			if (message.getFrom().equals(userName))
-				messages.add(message);
-
+		List<Message> messages = null;
+		try {
+			messages = FileDatabase.getInstance().messagesFrom(userName);
+		} catch (Exception e) {
+			try {
+				e.printStackTrace(response.getWriter());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
 		return html("outbox", messages);
 	}
 }

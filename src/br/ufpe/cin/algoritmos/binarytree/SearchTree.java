@@ -1,10 +1,12 @@
 package br.ufpe.cin.algoritmos.binarytree;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 public class SearchTree<TKey extends Comparable<TKey>, TValue> implements
-		BinaryTree<TKey, TValue> {
+		BinaryTree<TKey, TValue>, Serializable {
 
+	private static final long serialVersionUID = 4425490807845621511L;
 	private TreeNode<TKey, TValue> root;
 	private int count;
 
