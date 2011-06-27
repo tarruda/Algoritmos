@@ -2,7 +2,7 @@
 <project 
     xmlns:ivy="antlib:org.apache.ivy.ant"
     name="algoritmos" 
-    default="run-tests" 
+    default="run" 
     basedir=".">
     <description>
         Projeto de algoritmos
