@@ -8,7 +8,7 @@
         Projeto de algoritmos
     </description>
     <property name="content-dir" value="content" />
-    <property name="views-dir" value="br/ufpe/cin/algoritmos/views" />
+    <property name="views-dir" value="views" />
     <property name="src-dir" value="src" />
     <property name="test-src-dir" value="test" />
     <property name="content-src-dir" value="${src-dir}/${content-dir}" />

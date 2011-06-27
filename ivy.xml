@@ -8,14 +8,14 @@
 		<dependency org="org.mortbay.jetty" name="jetty" rev="7.0.0.pre5"
 			conf="main->default">
 			<artifact name="jetty" type="jar" />
-		</dependency>	
+		</dependency>
 		<dependency org="com.google.code.gson" name="gson" rev="1.7.1"
 			conf="main->default">
 			<artifact name="gson" type="jar" />
 		</dependency>
-		<dependency org="org.apache.velocity" name="velocity" rev="1.7"
+		<dependency org="org.antlr" name="stringtemplate" rev="4.0.2"
 			conf="main->default">
-			<artifact name="velocity" type="jar" />
+			<artifact name="stringtemplate" type="jar" />
 		</dependency>
 		<dependency org="junit" name="junit" rev="4.8.2" conf="test->default" />
 	</dependencies>

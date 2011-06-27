@@ -2,11 +2,8 @@ package br.ufpe.cin.algoritmos.web;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +30,8 @@ public class AppServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		System.out.println("Receiving request from : " + req.getRemoteAddr()
+				+ ". User agent : " + req.getHeader("User-Agent"));
 
 		String uri = req.getRequestURI();
 		Matcher matcher = uriPattern.matcher(uri);
@@ -41,48 +40,39 @@ public class AppServlet extends HttpServlet {
 			String controllerName = matcher.group(1);
 			Class<?> controllerClass = loadControllerClass(controllerName);
 			if (controllerClass == null)
-				resp.getWriter().println("Controller nao encontrado.");
-			// resp.sendRedirect("/index");
+				resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		
 			else {
-				String method = req.getMethod();
-				Method controllerMethod = getControllerMethod(method,
-						req.getParameterMap(), controllerClass);
-				if (controllerMethod == null)
-					resp.getWriter().println("Método nao encontrado.");
-				// resp.sendRedirect("/index");
-				else {
-					try {
-						Controller controller = (Controller) createController(controllerClass);
+				try {
+					Controller controller = (Controller) createController(controllerClass);
 
-						controller.setRequest(req);
-						controller.setResponse(resp);
+					controller.setRequest(req);
+					controller.setResponse(resp);
 
-						Collection<?> values = req.getParameterMap().values();
-						String[] paramValues = new String[values.size()];
-						int idx = 0;
-						for (Object o : values) {
-							String[] oo = (String[]) o;
-							paramValues[idx] = oo[0];
-							idx++;
-						}
-						Result result = controller.beforeRequest();
-						if (result == null)
-							result = (Result) controllerMethod.invoke(
-									controller, (Object[]) paramValues);
-
+					Result result = controller.beforeRequest();
+					if (result == null)
+						if (req.getMethod().equals("GET"))
+							result = controller.get();
+						else if (req.getMethod().equals("POST"))
+							result = controller.post();
+					if (result != null)
 						if (result instanceof RedirectResult)
 							resp.sendRedirect(((RedirectResult) result)
 									.getUrl());
-						else
+						else {
+							resp.setContentType(result.getContentType());
+							resp.setCharacterEncoding(result.getCharset());
 							result.render(resp.getWriter());
-					} catch (Exception ex) {
-						printException(req, resp, ex);
-					}
+						}
+					else
+						resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				} catch (Exception ex) {
+					printException(req, resp, ex);
 				}
-
 			}
+
 		} else
-			resp.sendRedirect("/index");
+			resp.sendRedirect("/inbox");
 	}
 
 	private Class<?> loadControllerClass(String name) {
@@ -92,7 +82,6 @@ public class AppServlet extends HttpServlet {
 			synchronized (mappedControllers) {
 				if (!mappedControllers.containsKey(key))
 					try {
-
 						File controllerDir = new File(controllersPath);
 						String[] files = controllerDir.list();
 						for (String file : files) {
@@ -101,10 +90,9 @@ public class AppServlet extends HttpServlet {
 									"");
 							String keyName = file.replaceAll(
 									"Controller.class", "");
-							mappedControllers.put(keyName.toLowerCase(),
-									Class.forName(fullClassName));
+							mappedControllers.put(keyName.toLowerCase(), Class
+									.forName(fullClassName));
 						}
-
 						ret = mappedControllers.get(key);
 
 					} catch (ClassNotFoundException e) {
@@ -115,28 +103,6 @@ public class AppServlet extends HttpServlet {
 			}
 		else
 			ret = mappedControllers.get(key);
-		return ret;
-	}
-
-	private Method getControllerMethod(String method, Map<?, ?> parameterMap,
-			Class<?> controllerClass) {
-		Method ret = null;
-		Set<?> keySet = parameterMap.keySet();
-		int size = keySet.size();
-
-		Class<?>[] paramTypes = new Class<?>[size];
-		for (int i = 0; i < size; i++)
-			paramTypes[i] = String.class;
-		try {
-			Method m = controllerClass.getMethod(method.toLowerCase(),
-					paramTypes);
-			if (m.getReturnType().equals(Result.class))
-				ret = m;
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
 		return ret;
 	}
 
@@ -158,8 +124,11 @@ public class AppServlet extends HttpServlet {
 		resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
 		resp.getWriter().println("<h3>");
-		ex.printStackTrace(resp.getWriter());
+		resp.getWriter().println(ex.getMessage());
 		resp.getWriter().println("</h3>");
+		resp.getWriter().println("<h4>");
+		ex.printStackTrace(resp.getWriter());
+		resp.getWriter().println("</h4>");
 	}
 
 }

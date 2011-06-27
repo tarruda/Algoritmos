@@ -7,15 +7,10 @@ public class ControllerBase extends Controller {
 
 	@Override
 	public Result beforeRequest() {
-
-		
-		boolean autenticado = true;
-
-		if (autenticado)
-			return null;
-
-		return redirect("index");
-
+		String userName = getUserName();
+		if (userName == null || userName.equals("-1"))
+			return redirect("/login");
+		return null;
 	}
-
+	
 }

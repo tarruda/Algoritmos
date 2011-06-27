@@ -1,0 +1,23 @@
+import "layout.stg"
+
+@page.title() ::= "Nova mensagem"
+
+@page.main() ::= <<
+<div id="form-container">
+	<form id="new-message-form" action="/newmessage" method="post">	
+		<div data-role="fieldcontain">					
+			<label for="toUserName">Para:</label>
+			<input type="text" id="toUserName" name="toUserName" />
+		</div>
+		<div data-role="fieldcontain">			
+			<label for="title">Título:</label>
+			<input type="text" id="title" name="title" />
+		</div>
+		<div data-role="fieldcontain">		
+			<label for="text">Mensagem:</label>
+			<textarea id="text" name="text"></textarea>
+		</div>
+		<input type="submit" value="Enviar" />				
+	</form>
+</div>
+>>

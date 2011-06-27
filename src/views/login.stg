@@ -1,0 +1,18 @@
+import "layout.stg"
+
+@page.title() ::= "Login"
+
+@page.menu() ::= ""
+
+@page.headerButton() ::= ""
+
+@page.main() ::= <<
+<div id="login-container">
+	<form id="login-form" action="login" method="post">	
+		<div data-role="fieldcontain">		
+			<label for="userName">Digite seu nome:</label><input type="text" id="userName" name="userName" />					
+		</div>	
+		<input type="submit" value="Entrar" />				
+	</form>
+</div>
+>>

@@ -1,0 +1,15 @@
+
+messages(list) ::= <<
+$if(list)$
+<ul data-role="listview">
+	$list: { message| 
+	<li>
+		<h4>De: $message.from$</h4>
+		<h4>Para: $message.to$</h4>
+		<h4>Título: $message.title$</h4>		
+		<p>$message.text$</p>		
+	</li>
+	}$
+</ul>
+$endif$
+>>

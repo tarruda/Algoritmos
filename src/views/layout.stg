@@ -1,0 +1,57 @@
+
+defaultMenu ::= [	
+	"Nova mensagem": "/newmessage",
+	"Caixa de entrada": "/inbox",
+	"Caixa de saída": "/outbox"
+]
+
+page(model, isMobile, userName) ::= <<
+<!DOCTYPE html>
+<html>
+    <head>
+       	<title>
+       	$@title()$
+       	</title>
+       	$@headers()$      	
+       	$if(true)$
+       	<script type="text/javascript" src="/content/js/jquery.js"></script>
+       	<script type="text/javascript" src="/content/js/jquery.mobile-1.0b1.js"></script>
+		<link rel="stylesheet" type="text/css" href="/content/css/jquery.mobile-1.0b1.css" />
+		$endif$			
+		<script type="text/javascript" src="/content/js/site.js"></script>
+		<link rel="stylesheet" type="text/css" href="/content/css/site.css" />
+    </head>
+    <body>    
+       <div id="page" data-role="page">
+       		<div id="menu" data-role="header">
+       			$@headerButton$
+       			<a href="/logout" data-icon="delete">Sair</a>  
+       			$@end$       			  			
+	       		<h1>	       			
+	       			$@title()$	       			
+	       		</h1>	       		
+	       		$@menu$
+		        $menu(defaultMenu)$
+		        $@end$
+	        </div>		
+	   		<div id="main" data-role="content">
+		       	$@main$
+		       	Main content.
+		       	$@end$
+	       	</div>	       
+       </div>            
+    </body>
+</html>
+>>
+
+menu(urls) ::= <<
+<div data-role="navbar">
+	<ul>
+	$urls.keys, urls.values: { display, url | 
+		<li>			
+			<a href="$url$" data-ajax="false">$display$</a>
+		</li>
+	}$
+	</ul>
+</div>
+>>

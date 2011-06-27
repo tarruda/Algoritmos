@@ -1,0 +1,11 @@
+import "layout.stg"
+import "message.stg"
+
+@page.headers() ::= <<
+<meta http-equiv="refresh" content="5" />
+>>
+
+@page.title() ::= "Caixa de saída"
+
+@page.main() ::= "$messages(model)$"
+
