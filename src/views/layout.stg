@@ -1,8 +1,8 @@
 
 defaultMenu ::= [	
 	"Nova mensagem": "/newmessage",
-	"Caixa de entrada": "/inbox",
-	"Caixa de saída": "/outbox"
+	"Mensagens Recebidas": "/inbox",
+	"Mensagens Enviadas": "/outbox"
 ]
 
 page(model, isMobile, userName) ::= <<

@@ -5,7 +5,7 @@ import "message.stg"
 <meta http-equiv="refresh" content="5" />
 >>
 
-@page.title() ::= "Caixa de entrada"
+@page.title() ::= "Recebidas"
 
 @page.main() ::= "$messages(model)$"
 

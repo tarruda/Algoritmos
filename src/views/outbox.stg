@@ -1,7 +1,7 @@
 import "layout.stg"
 import "message.stg"
 
-@page.title() ::= "Caixa de saída"
+@page.title() ::= "Enviadas"
 
 @page.main() ::= "$messages(model)$"
 

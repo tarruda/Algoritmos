@@ -6,7 +6,7 @@ import "layout.stg"
 <div id="form-container">
 	<form id="new-message-form" action="/newmessage" method="post">	
 		<div data-role="fieldcontain">					
-			<label for="toUserName">Para:</label>
+			<label for="toUserName">Para Mesa No:</label>
 			<input type="text" id="toUserName" name="toUserName" />
 		</div>
 		<div data-role="fieldcontain">			
