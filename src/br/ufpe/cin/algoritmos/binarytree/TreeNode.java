@@ -1,6 +1,10 @@
 package br.ufpe.cin.algoritmos.binarytree;
 
-class TreeNode<TKey extends Comparable<TKey>, TValue> {
+import java.io.Serializable;
+
+class TreeNode<TKey extends Comparable<TKey>, TValue> implements Serializable{
+	
+	private static final long serialVersionUID = 8392649820647246085L;
 	
 	private TKey key;
 	private TValue value;

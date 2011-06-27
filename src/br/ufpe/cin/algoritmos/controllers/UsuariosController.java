@@ -1,11 +1,6 @@
 package br.ufpe.cin.algoritmos.controllers;
 
-import java.util.ArrayList;
-
-import javax.servlet.http.Cookie;
-
 import br.ufpe.cin.algoritmos.models.Usuario;
-import br.ufpe.cin.algoritmos.web.Controller;
 import br.ufpe.cin.algoritmos.web.Result;
 
 public class UsuariosController extends ControllerBase {

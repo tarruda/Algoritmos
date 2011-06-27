@@ -3,7 +3,6 @@ package br.ufpe.cin.algoritmos.controllers;
 import javax.servlet.http.Cookie;
 
 import br.ufpe.cin.algoritmos.models.Usuario;
-import br.ufpe.cin.algoritmos.web.Controller;
 import br.ufpe.cin.algoritmos.web.Result;
 
 public class ExcluirUsuarioController extends ControllerBase {

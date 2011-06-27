@@ -1,19 +1,23 @@
 package br.ufpe.cin.algoritmos.db;
 
-public class Manifest {
+import java.io.Serializable;
 
-	private String dbName;
+public class Manifest implements Serializable {
 
-	public Manifest(String dbName) {
-		this.dbName = dbName;
+	private static final long serialVersionUID = -3314061327482200635L;
+	private DatabaseIndex toUserIndex;
+	private DatabaseIndex fromUserIndex;
+
+	public DatabaseIndex getToUserIndex() {
+		if (toUserIndex == null)
+			toUserIndex = new DatabaseIndex();
+		return toUserIndex;
 	}
 
-	public void setDbName(String dbName) {
-		this.dbName = dbName;
-	}
-
-	public String getDbName() {
-		return dbName;
+	public DatabaseIndex getFromUserIndex() {
+		if (fromUserIndex == null)
+			fromUserIndex = new DatabaseIndex();
+		return fromUserIndex;
 	}
 
 }
